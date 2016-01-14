@@ -1,0 +1,27 @@
+{
+    "info": "This config is for the prototype using an HMTL Board",
+    "header": {
+        "protocol_version": 3,
+        "hardware_version": 4,
+        "device_id": 0,
+        "address": 0,
+        "baud": 57600,
+        "flags": 0
+    },
+    "outputs": [
+        {
+            "type": "pixels",
+            "clockpin": 255,
+            "datapin": 12,
+            "numpixels": 16,
+            "rgbtype": 0
+        },
+        {
+            "type": "mpr121",
+            "irqpin": 1,
+            "useinterrupt": 0,
+            "trigger": [ 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+            "release": [  2,  2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+        }
+    ]
+}

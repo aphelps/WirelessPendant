@@ -1,0 +1,69 @@
+cmake_minimum_required(VERSION 3.3)
+project(WirelessPendant)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+set(SOURCE_FILES
+        src/bringup/bringup.ino
+        src/pendant/pendant.ino
+        src/pendant/modes.cpp
+        README.md
+        WirelessPendant.json
+        WirelessPendant_proto.json src/pendant/pendant.h src/pendant/sensors.cpp)
+
+add_executable(WirelessPendant ${SOURCE_FILES})
+
+# Core Arduino Libraries
+set(ARDUINO_HOME /Applications/Arduino_1.6.5.app/Contents/Java)
+include_directories(${ARDUINO_HOME}/hardware/arduino/avr/cores/arduino/)
+include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/EEPROM)
+include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/SoftwareSerial)
+include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/SPI)
+include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/Wire)
+
+# Arduino libraries
+set(LIBRARIES /Users/amp/Dropbox/Arduino/libraries)
+include_directories(${LIBRARIES}/AFMotor)
+include_directories(${LIBRARIES}/Adafruit_GFX)
+include_directories(${LIBRARIES}/Adafruit_LEDBackpack)
+include_directories(${LIBRARIES}/Adafruit_MAX31885)
+include_directories(${LIBRARIES}/Adafruit_MPR121_Library)
+include_directories(${LIBRARIES}/Adafruit_WS2801)
+include_directories(${LIBRARIES}/CapacitiveSensor)
+include_directories(${LIBRARIES}/CubeLibrary)
+include_directories(${LIBRARIES}/Debug)
+include_directories(${LIBRARIES}/EEPromUtils)
+include_directories(${LIBRARIES}/FastLED)
+include_directories(${LIBRARIES}/GeneralUtils)
+include_directories(${LIBRARIES}/HMTLMessaging)
+include_directories(${LIBRARIES}/HMTLPoofer)
+include_directories(${LIBRARIES}/HMTLTypes)
+include_directories(${LIBRARIES}/HMTLprotocol)
+include_directories(${LIBRARIES}/LCD)
+include_directories(${LIBRARIES}/LiquidCrystal)
+include_directories(${LIBRARIES}/LiquidTWI)
+include_directories(${LIBRARIES}/MPR121)
+include_directories(${LIBRARIES}/Menu)
+include_directories(${LIBRARIES}/Morse)
+include_directories(${LIBRARIES}/NewPing)
+include_directories(${LIBRARIES}/ObjectLibrary)
+include_directories(${LIBRARIES}/Pins)
+include_directories(${LIBRARIES}/PixelUtil)
+include_directories(${LIBRARIES}/RFM69)
+include_directories(${LIBRARIES}/RS485Utils)
+include_directories(${LIBRARIES}/RS485_non_blocking)
+include_directories(${LIBRARIES}/RS485_protocol)
+include_directories(${LIBRARIES}/SPIFlash)
+include_directories(${LIBRARIES}/SerialCLI)
+include_directories(${LIBRARIES}/Shift)
+include_directories(${LIBRARIES}/ShiftBar)
+include_directories(${LIBRARIES}/Socket)
+include_directories(${LIBRARIES}/Switch)
+include_directories(${LIBRARIES}/TimeSync)
+include_directories(${LIBRARIES}/Tlc5940)
+include_directories(${LIBRARIES}/TriangleLibrary)
+include_directories(${LIBRARIES}/XBeeSocket)
+include_directories(${LIBRARIES}/Xbee)
+include_directories(${LIBRARIES}/blynk-library)
+include_directories(${LIBRARIES}/ffft)
+include_directories(${LIBRARIES}/globals)
