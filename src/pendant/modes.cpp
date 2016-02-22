@@ -42,10 +42,6 @@ program_tracker_t *active_programs[HMTL_MAX_OUTPUTS];
 ProgramManager manager;
 MessageHandler handler;
 
-// Time synchronization
-TimeSync time = TimeSync();
-
-
 void init_modes(Socket **sockets, byte num_sockets) {
   /* Setup the program manager */
   manager = ProgramManager(outputs, active_programs, objects, HMTL_MAX_OUTPUTS,
@@ -99,7 +95,7 @@ boolean program_test_pixels_init(msg_program_t *msg,
   }
 
   mode_test_state_t *state = (mode_test_state_t *)malloc(sizeof(mode_test_state_t));
-  state->last_change_ms = millis();
+  state->last_change_ms = time.ms();
   state->period = *(uint16_t *)msg->values;
   if (state->period == 0)
     state->period = 100;
@@ -121,7 +117,7 @@ void setXY(PixelUtil *pixels, const uint8_t x, const uint8_t y,
 boolean program_test_pixels(output_hdr_t *output, void *object,
                             program_tracker_t *tracker) {
   mode_test_state_t *state = (mode_test_state_t *)tracker->state;
-  unsigned long now = millis();
+  unsigned long now = time.ms();
 
   if (now - state->last_change_ms > state->period) {
     static uint8_t x = 0, y = 0;
