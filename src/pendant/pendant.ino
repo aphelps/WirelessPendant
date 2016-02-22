@@ -1,8 +1,14 @@
 /*******************************************************************************
+ * Author: Adam Phelps
+ * License: Create Commons Attribution-Non-Commercial
+ * Copyright: 2016
+ *
  * Wireless pendants
- */
+ ******************************************************************************/
 
-#define DEBUG_LEVEL DEBUG_HIGH
+#ifndef DEBUG_LEVEL
+  #define DEBUG_LEVEL DEBUG_HIGH
+#endif
 #include "Debug.h"
 
 #include "EEPROM.h"
@@ -30,22 +36,18 @@
 #include "HMTLPrograms.h"
 #include "TimeSync.h"
 
+
+#include "pendant.h"
+#include "modes.h"
+
 /******/
 
 config_hdr_t config;
 output_hdr_t *outputs[HMTL_MAX_OUTPUTS];
-config_hdr_t readconfig;
 config_max_t readoutputs[HMTL_MAX_OUTPUTS];
+void *objects[HMTL_MAX_OUTPUTS];
 
-config_pixels_t pixel_output;
 config_value_t value_output;
-config_rs485_t rs485_output;
-
-boolean has_value = false;
-boolean has_pixels = false;
-boolean has_rs485 = false;
-
-int configOffset = -1;
 
 PixelUtil pixels;
 
@@ -53,76 +55,69 @@ RS485Socket rs485;
 #define SEND_BUFFER_SIZE 64 // The data size for transmission buffers
 byte rs485_data_buffer[RS485_BUFFER_TOTAL(SEND_BUFFER_SIZE)];
 
+#define MAX_SOCKETS 2
+Socket *sockets[MAX_SOCKETS] = { NULL, NULL };
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(57600);
 
-  DEBUG2_PRINTLN("***** HMTL Bringup *****");
-
+  int configOffset = -1;
   int32_t outputs_found = hmtl_setup(&config, readoutputs,
-                                     outputs, NULL, HMTL_MAX_OUTPUTS,
-                                     NULL,
-                                     NULL,
+                                     outputs, objects, HMTL_MAX_OUTPUTS,
+                                     &rs485,
+                                     NULL,          // XBee
                                      &pixels,
-                                     NULL, // MPR121
-                                     NULL,
+                                     NULL,          // MPR121
+                                     NULL,          // RGB
                                      &value_output, // Value
                                      &configOffset);
 
   DEBUG4_VALUE("Config size:", configOffset - HMTL_CONFIG_ADDR);
   DEBUG4_VALUELN(" end:", configOffset);
-  DEBUG4_COMMAND(hmtl_print_config(&config, outputs));
-
-  if (outputs_found & (1 << HMTL_OUTPUT_VALUE)) {
-    has_value = true;
-  }
 
   if (outputs_found & (1 << HMTL_OUTPUT_PIXELS)) {
     for (unsigned int i = 0; i < pixels.numPixels(); i++) {
       pixels.setPixelRGB(i, 0, 0, 0);
     }
     pixels.update();
-    has_pixels = true;
 
-    FastLED.setBrightness(32); // XXX - Pixels?
+    FastLED.setBrightness(128); // TODO - Should be in Pixels?
   }
+
+  /* Setup communication devices */
+  byte num_sockets = 0;
+
+  if (outputs_found & (1 << HMTL_OUTPUT_RS485)) {
+    /* Setup the RS485 connection */
+    rs485.setup();
+    rs485.initBuffer(rs485_data_buffer, SEND_BUFFER_SIZE);
+    sockets[num_sockets++] = &rs485;
+  }
+
+  if (num_sockets == 0) {
+    DEBUG_ERR("No sockets configured");
+    DEBUG_ERR_STATE(2);
+  }
+
+  init_modes(sockets, num_sockets);
+
+  DEBUG2_PRINTLN("* Wireless Pendant Initialized *");
+
+  // Send the ready signal to the serial port
+  Serial.println(F(HMTL_READY));
 }
 
-void setXY(const uint8_t x, const uint8_t y, const uint32_t color) {
-  uint8_t led = (x % 4) + (y % 4) * 4;
-  pixels.setPixelRGB(led, color);
-}
 
 #define PERIOD 100
 unsigned long last_change = 0;
 int cycle = 0;
 void loop() {
-  unsigned long now = millis();
+
+  // TODO: Add sensors and such here
 
   /*
-   * Change the display mode periodically
+   * Check for messages and handle output states
    */
-  if (now - last_change > PERIOD) {
-    static uint8_t x = 0, y = 0;
-    setXY(x, y, pixel_wheel(cycle));
-    pixels.update();
-
-    switch (random8() % 4) {
-      case 0:
-        x += 1;
-        break;
-      case 1:
-        x -= 1;
-        break;
-      case 2:
-        y += 1;
-        break;
-      case 3:
-        y -= 1;
-        break;
-    }
-
-    cycle++;
-    last_change = now;
-  }
+  boolean updated = messages_and_modes();
 }
 

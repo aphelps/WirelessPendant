@@ -9,13 +9,13 @@ set(SOURCE_FILES
         src/pendant/modes.cpp
         README.md
         WirelessPendant.json
-        WirelessPendant_proto.json src/pendant/pendant.h src/pendant/sensors.cpp)
+        WirelessPendant_proto.json src/pendant/pendant.h src/pendant/sensors.cpp src/pendant/modes.h)
 
 add_executable(WirelessPendant ${SOURCE_FILES})
 
 # Core Arduino Libraries
 set(ARDUINO_HOME /Applications/Arduino_1.6.5.app/Contents/Java)
-include_directories(${ARDUINO_HOME}/hardware/arduino/avr/cores/arduino/)
+include_directories(${ARDUINO_HOME}/hardware/arduino/avr/cores/arduino)
 include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/EEPROM)
 include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/SoftwareSerial)
 include_directories(${ARDUINO_HOME}/hardware/arduino/avr/libraries/SPI)
@@ -44,6 +44,7 @@ include_directories(${LIBRARIES}/LiquidCrystal)
 include_directories(${LIBRARIES}/LiquidTWI)
 include_directories(${LIBRARIES}/MPR121)
 include_directories(${LIBRARIES}/Menu)
+include_directories(${LIBRARIES}/MessageHandler)
 include_directories(${LIBRARIES}/Morse)
 include_directories(${LIBRARIES}/NewPing)
 include_directories(${LIBRARIES}/ObjectLibrary)
