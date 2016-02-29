@@ -42,6 +42,21 @@ program_tracker_t *active_programs[HMTL_MAX_OUTPUTS];
 ProgramManager manager;
 MessageHandler handler;
 
+/*
+ * Execute initial commands
+ */
+void startup_commands() {
+  const byte data[] = { // This turns on PENDANT_TEST_PIXELS for all outputs
+          0xfc,0x00,0x02,0x17,0x01,0x00,0xff,0xff,
+          0x03,0xfe,0x20,0x32,0x00,0x00,0x00,0x00,
+          0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  memcpy(rs485.send_buffer, data, sizeof (data));
+
+  handler.process_msg((msg_hdr_t *)rs485.send_buffer, &rs485,
+                      NULL, &config);
+
+}
+
 void init_modes(Socket **sockets, byte num_sockets) {
   /* Setup the program manager */
   manager = ProgramManager(outputs, active_programs, objects, HMTL_MAX_OUTPUTS,
@@ -49,6 +64,9 @@ void init_modes(Socket **sockets, byte num_sockets) {
 
   /* Setup a message handler with the program manager */
   handler = MessageHandler(config.address, &manager, sockets, num_sockets);
+
+  /* Execute any initial commands */
+  startup_commands();
 }
 
 /*
