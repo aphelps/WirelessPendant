@@ -13,6 +13,8 @@
 * Change 3.3V to be fed from 5V rather than the raw power, allows USBPWR to be fully separate from RAW, removed diode from USBVCC
 * Mounting holes (use for something, since this iteration won't be a good pendant)
 * Added AMPWorks stamp
+* Added headers for 4 digital pins
+* Added headers for 2 digital pins
 
 TODO
 ----
@@ -27,3 +29,4 @@ TODO After flight
 * Choose a power switch
 * Check on where diode from USBVCC should go, if one is needed
 * Verify that the LED pins on 32u4 are valid (ie digital pins)
+* Verify the Dout pin values
