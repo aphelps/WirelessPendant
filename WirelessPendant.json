@@ -1,27 +1,33 @@
 {
-    "info": "This config is the default for the 4th revision HMTL PCB",
-    "header": {
-        "protocol_version": 3,
-        "hardware_version": 10,
-        "device_id": 0,
-        "address": 0,
-        "baud": 57600,
-        "flags": 0,
+  "info": "This config is for 1st iteration of the wireless pendant",
+  "header": {
+    "protocol_version": 3,
+    "hardware_version": 10,
+    "device_id": 0,
+    "address": 0,
+    "baud": 57600,
+    "flags": 0
+  },
+  "outputs": [
+    {
+      "type": "pixels",
+      "clockpin": 255,
+      "datapin": 10,
+      "numpixels": 16,
+      "rgbtype": 0
     },
-    "outputs": [
-        {
-            "type": "pixels",
-            "clockpin": 255,
-            "datapin": 10,
-            "numpixels": 16,
-            "rgbtype": 0
-        },
-        {
-            "type": "mpr121",
-            "irqpin": 1,
-            "useinterrupt": 0,
-            "trigger": [ 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-            "release": [  2,  2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-        }
-    ]
+    {
+      "type": "mpr121",
+      "irqpin": 1,
+      "useinterrupt": 0,
+      "trigger": [ 15, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+      "release": [  2,  2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+    },
+    {
+      "type": "rs485",
+      "recvpin": 4,
+      "xmitpin": 7,
+      "enablepin": 2
+    }
+  ]
 }
