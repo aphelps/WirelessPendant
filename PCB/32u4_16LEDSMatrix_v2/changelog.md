@@ -26,3 +26,4 @@ TODO After flight
 * Figure out resister size for MISO line to radio
 * Choose a power switch
 * Check on where diode from USBVCC should go, if one is needed
+* Verify that the LED pins on 32u4 are valid (ie digital pins)
